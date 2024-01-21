@@ -18,7 +18,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(
   session({
-    secret: "your_secret_key",
+    secret: ["primeira-atual", "segunda-velha"],
     resave: false,
     saveUninitialized: true,
   })
@@ -30,11 +30,22 @@ const oauth2Client = new google.auth.OAuth2(
   `${process.env.REDIRECT_URI}/oauth2callback`
 );
 
+const scopes = [
+  'https://www.googleapis.com/auth/youtube',
+  'https://www.googleapis.com/auth/userinfo.profile',
+  'https://www.googleapis.com/auth/userinfo.email'
+];
+
+const authUrl = oauth2Client.generateAuthUrl({
+  access_type: 'offline',
+  scope: scopes,
+});
+
 app.get("/auth/google", (req, res) => {
-  const authUrl = oauth2Client.generateAuthUrl({
-    access_type: "offline",
-    scope: ["https://www.googleapis.com/auth/youtube"],
-  });
+  // const authUrl = oauth2Client.generateAuthUrl({
+  //   access_type: "offline",
+  //   scope: ["https://www.googleapis.com/auth/youtube"],
+  // });
   res.redirect(authUrl);
 });
 
