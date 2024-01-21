@@ -1,0 +1,60 @@
+version: '3'
+services:
+  api:
+    volumes:
+      #      - api:/app
+      - type: bind
+        source: ./src
+        target: /app
+    init: true
+    #    container_name: api_youtube_express
+    hostname: api_yt
+    labels:
+      - "ca.codein.api=API entrypoint"
+    # https://docs.docker.com/compose/compose-file/05-services/#network_mode
+    networks:
+      - youtube_api
+    restart: "on-failure:3"
+    build:
+      context: ./src
+      #    image: api_youtube_subscriptions:latest
+      #    develop:
+      #      watch:
+      #        - path: ./src
+      #          action: sync+restart
+      #    depends_on:
+      #      - db
+    ports:
+      - 1235:3000
+    env_file:
+      - ./a.env
+        #      - ./b.env
+    environment:
+      - FOO=BUZZ
+    # entrypoint?
+    # https://docs.docker.com/compose/compose-file/develop/
+    #    command: ["echo", "Foo: ${FOO}"]
+    #   cpu_count: 1
+    #    cpu_percent: 50
+    #    configs:
+    #      - nginx
+    expose:
+      - "1235"
+        #  db:
+        #    image: postgres
+        #    environment:
+        #      POSTGRES_DB:  ioiewoiru923
+        #      POSTGRES_USER: x123lkjasd23
+        #      POSTGRES_PASSWORD: $#%DsdfSDF@#$%
+        #    volumes:
+        #      - db-data:/bar
+# TODO: FUTURE IMPROVEMENT
+# https://docs.docker.com/compose/compose-file/05-services/#healthcheck    
+# https://docs.docker.com/compose/compose-file/06-networks/
+networks:
+  youtube_api:
+    #volumes:
+    #  api:
+#configs:
+#  nginx:
+#    file: ./nginx.conf

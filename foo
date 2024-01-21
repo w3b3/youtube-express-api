@@ -1,0 +1,12 @@
+HTTP/2 404 
+server: nginx
+date: Sat, 20 Jan 2024 16:15:08 GMT
+content-type: text/html; charset=utf-8
+content-length: 152
+x-powered-by: Express
+access-control-allow-origin: https://codein.ca
+vary: Origin
+content-security-policy: default-src 'none'
+x-content-type-options: nosniff
+set-cookie: connect.sid=s%3A1uj5o4x_2HUolQocH4Te9f_va8EkBKLj.cHKV2tdwAqpz4JQ6CVdHmOUFEzcWDuHXwxOiggMpE2Q; Path=/; HttpOnly
+

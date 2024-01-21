@@ -1,0 +1,14 @@
+# https://docs.docker.com/engine/reference/builder/
+FROM node
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm install cors
+RUN npm ci
+#CMD: ["npm", "start"]
+EXPOSE 1235
+#ADD . /api
+COPY . .
+# WORKDIR .
+ENTRYPOINT ["npm", "start"]
