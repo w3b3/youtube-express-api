@@ -57,14 +57,14 @@ app.get("/oauth2callback", async (req, res) => {
     req.session.tokens = tokens;
     res.redirect("/"); // redirect to your front-end app
   } catch (error) {
-    console.log("Error on oauth callback", error);
+    console.error("Error on oauth callback", error);
     res.status(500).send("Callback");
   }
 });
 
 app.post("/exchange_code", async (req, res) => {
   try {
-    console.log(" req ❎ ", req);
+    // console.log(" req ❎ ", req);
     if (!("body" in req)) {
       res.status(400).send("No body");
       throw new Error('Property "body" is missing in req');
@@ -94,5 +94,5 @@ app.get("/", (req, res) => {
 // Additional endpoints like listing subscriptions, unsubscribing, etc.
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.info(`Server running on port ${port}`);
 });
