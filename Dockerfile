@@ -1,14 +1,14 @@
 # https://docs.docker.com/engine/reference/builder/
-FROM node
+FROM node:lts-alpine
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY ./package*.json ./
 RUN npm install cors
 RUN npm ci
 #CMD: ["npm", "start"]
 EXPOSE 1235
 #ADD . /api
-COPY . .
+COPY ./src .
 # WORKDIR .
 ENTRYPOINT ["npm", "start"]

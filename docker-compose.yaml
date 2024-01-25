@@ -7,8 +7,8 @@ services:
         source: ./src
         target: /app
     init: true
-    #    container_name: api_youtube_express
-    hostname: api_yt
+    container_name: api
+    hostname: api
     labels:
       - "ca.codein.api=API entrypoint"
     # https://docs.docker.com/compose/compose-file/05-services/#network_mode
@@ -16,8 +16,8 @@ services:
       - youtube_api
     restart: "on-failure:3"
     build:
-      context: ./src
-      #    image: api_youtube_subscriptions:latest
+      context: .
+    image: w3b3/api_youtube_subscriptions:latest
       #    develop:
       #      watch:
       #        - path: ./src

@@ -87,8 +87,45 @@ app.post("/exchange_code", async (req, res) => {
   }
 });
 
+app.post("/unsubscribe", async (req, res) => {
+    try {
+        const {id} = req.body;
+	    console.log("session", req.session);
+	  let auth;
+	    if (req.session.tokens) {
+		    console.info(tokens);
+	    const { accessToken, refreshToken } = req.session.tokens;
+	    // Use accessToken and refreshToken as needed
+	  auth = accessToken;
+	    } else {
+	    res.status(401).send('No token found in session');
+	  }
+        //console.log(id, auth); // TODO: DEBUG 
+        const service = google.youtube('v3');
+        
+        service.subscriptions.delete({
+            auth,
+            id
+        }, (err) => {
+            if (err) {
+		console.error(err?.response?.data?.error?.message);
+                return res.status(401).send(err?.response?.data?.error?.message);
+                //return console.error(err.response?.data.error ?? err.response);                
+            } else {
+            //console.log(`Error: ${err}`);
+            console.info("ALL GOOD");
+		return res.status(201).send("GOOD");
+            // return console.log("ALL GOOD");
+	    }
+	    });
+    } catch (error) {
+        console.error("CATCH",error);
+	    return res.status(400).send("unsubscribe error");
+    }
+});
+
 app.get("/", (req, res) => {
-  res.json({ seriously: "are you really here?" });
+  res.send("are you really here?");
 });
 
 // Additional endpoints like listing subscriptions, unsubscribing, etc.
