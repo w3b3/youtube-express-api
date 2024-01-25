@@ -4,7 +4,6 @@ FROM node:lts-alpine
 WORKDIR /usr/src/app
 
 COPY ./package*.json ./
-RUN npm install cors
 RUN npm ci
 #CMD: ["npm", "start"]
 EXPOSE 1235
