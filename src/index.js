@@ -21,23 +21,23 @@ app.use(
     secret: ["primeira-atual", "segunda-velha"],
     resave: false,
     saveUninitialized: true,
-  })
+  }),
 );
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.CLIENT_ID,
   process.env.CLIENT_SECRET,
-  `${process.env.REDIRECT_URI}/oauth2callback`
+  `${process.env.REDIRECT_URI}/oauth2callback`,
 );
 
 const scopes = [
-  'https://www.googleapis.com/auth/youtube',
-  'https://www.googleapis.com/auth/userinfo.profile',
-  'https://www.googleapis.com/auth/userinfo.email'
+  "https://www.googleapis.com/auth/youtube",
+  "https://www.googleapis.com/auth/userinfo.profile",
+  "https://www.googleapis.com/auth/userinfo.email",
 ];
 
 const authUrl = oauth2Client.generateAuthUrl({
-  access_type: 'offline',
+  access_type: "offline",
   scope: scopes,
 });
 
@@ -79,6 +79,7 @@ app.post("/exchange_code", async (req, res) => {
 
     // You may want to save these tokens in a session or a database
     // Depending on your application's needs.
+      req.session.access_token = tokens.access_token;
 
     res.send({ token: tokens.access_token });
   } catch (error) {
@@ -88,40 +89,43 @@ app.post("/exchange_code", async (req, res) => {
 });
 
 app.post("/unsubscribe", async (req, res) => {
-    try {
-        const {id} = req.body;
-	    console.log("session", req.session);
-	  let auth;
-	    if (req.session.tokens) {
-		    console.info(tokens);
-	    const { accessToken, refreshToken } = req.session.tokens;
-	    // Use accessToken and refreshToken as needed
-	  auth = accessToken;
-	    } else {
-	    res.status(401).send('No token found in session');
-	  }
-        //console.log(id, auth); // TODO: DEBUG
-        const service = google.youtube('v3');
-
-        service.subscriptions.delete({
-            auth,
-            id
-        }, (err) => {
-            if (err) {
-		console.error(err?.response?.data?.error?.message);
-                return res.status(401).send(err?.response?.data?.error?.message);
-                //return console.error(err.response?.data.error ?? err.response);
-            } else {
-            //console.log(`Error: ${err}`);
-            console.info("ALL GOOD");
-		return res.status(201).send("GOOD");
-            // return console.log("ALL GOOD");
-	    }
-	    });
-    } catch (error) {
-        console.error("CATCH",error);
-	    return res.status(400).send("unsubscribe error");
+  try {
+    const { id } = req.body;
+    console.log("session", req.session);
+    let auth;
+    if (req.session.tokens) {
+      console.info(tokens);
+      const { accessToken, refreshToken } = req.session.tokens;
+      // Use accessToken and refreshToken as needed
+      auth = accessToken;
+    } else {
+      res.status(401).send("No token found in session");
     }
+    //console.log(id, auth); // TODO: DEBUG
+    const service = google.youtube("v3");
+
+    service.subscriptions.delete(
+      {
+        auth,
+        id,
+      },
+      (err) => {
+        if (err) {
+          console.error(err?.response?.data?.error?.message);
+          return res.status(401).send(err?.response?.data?.error?.message);
+          //return console.error(err.response?.data.error ?? err.response);
+        } else {
+          //console.log(`Error: ${err}`);
+          console.info("ALL GOOD");
+          return res.status(201).send("GOOD");
+          // return console.log("ALL GOOD");
+        }
+      },
+    );
+  } catch (error) {
+    console.error("CATCH", error);
+    return res.status(400).send("unsubscribe error");
+  }
 });
 
 app.get("/", (req, res) => {
