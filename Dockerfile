@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 COPY ./package*.json ./
 RUN npm ci
 #CMD: ["npm", "start"]
-EXPOSE 1235
+#EXPOSE 1235
 #ADD . /api
 COPY ./src .
 # WORKDIR .
