@@ -1,3 +1,5 @@
+"use strict";
+
 import express  from "express";
 import session from "express-session";
 import cors from "cors";
@@ -50,7 +52,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(errorhandler());
+//app.use(errorhandler());
 app.use(express.json());
 app.use(
   session({
@@ -60,12 +62,30 @@ app.use(
   }),
 );
 
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    return res.status(400).send({ message: "Invalid JSON payload" }); // Bad request
+  }
+  next();
+});
+
+// Use the errorhandler middleware
+if (process.env.NODE_ENV === 'development') {
+  // only use in development
+  app.use(errorhandler());
+}
+
 app.get("/", (req, res) => {
   res.json({message: "nothing to see here"});
 });
 
+app.get("/new", (req, res) => {
+    res.json({message: "think differently"});
+});
+
 app.post("/new", (req, res) => {
   if((req?.body?.email ?? false) && (req?.body?.password ?? false)) {
+      console.info(email);
     // const user = auth.createUserWithEmailAndPassword(req.body.email, req.body.password);
     //
     const auth = getAuth();
