@@ -1,6 +1,9 @@
 import express  from "express";
 import session from "express-session";
 import cors from "cors";
+import bodyParser from "body-parser";
+import errorhandler from "errorhandler";
+import cookieParser from "cookie-parser";
 // import { getAuth, signInWithCustomToken } from "firebase/auth";
 // import { getDatabase, ref, set } from "firebase/database";
 // import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
@@ -10,8 +13,10 @@ import cors from "cors";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+//import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
+import dotenv from 'dotenv';
+dotenv.config();
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -23,17 +28,15 @@ const firebaseConfig = {
   authDomain: process.env.AUTHDOMAIN,
   projectId: process.env.PROJECTID,
   storageBucket: process.env.STORAGEBUCKET,
-  messagingSenderId:p rocess.env.MESSAGINGSENDERID,
+  messagingSenderId: process.env.MESSAGINGSENDERID,
   appId: process.env.APPID,
   measurementId: process.env.MEASUREMENTID,
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
-
-require("dotenv").config();
+const firebase = initializeApp(firebaseConfig);
+//const analytics = getAnalytics(firebase);
+const auth = getAuth(firebase);
 
 const app = express();
 const port = process.env.PORT || 80; // or any port you prefer
@@ -45,6 +48,9 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(errorhandler());
 app.use(express.json());
 app.use(
   session({
@@ -59,7 +65,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/new", (req, res) => {
-  if(req?.body?.email ?? false && req?.body?.password ?? false) {
+  if((req?.body?.email ?? false) && (req?.body?.password ?? false)) {
     // const user = auth.createUserWithEmailAndPassword(req.body.email, req.body.password);
     //
     const auth = getAuth();
@@ -76,8 +82,8 @@ app.post("/new", (req, res) => {
           return res.status(400).json({message: "nothing happened", error: error
         });
     //
-  }
-});
+  })
+}});
 
 // Additional endpoints like listing subscriptions, unsubscribing, etc.
 
