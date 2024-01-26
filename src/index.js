@@ -1,6 +1,6 @@
 "use strict";
 
-import express  from "express";
+import express from "express";
 import session from "express-session";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -12,12 +12,11 @@ import cookieParser from "cookie-parser";
 // import { google } from "googleapis";
 // import { OAuth2Client } from "google-auth-library";
 
-
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 //import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -63,47 +62,49 @@ app.use(
 );
 
 app.use((err, req, res, next) => {
-  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+  if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
     return res.status(400).send({ message: "Invalid JSON payload" }); // Bad request
   }
   next();
 });
 
 // Use the errorhandler middleware
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   // only use in development
   app.use(errorhandler());
 }
 
 app.get("/", (req, res) => {
-  res.json({message: "nothing to see here"});
+  res.json({ message: "nothing to see here" });
 });
 
 app.get("/new", (req, res) => {
-    res.json({message: "think differently"});
+  res.json({ message: "think differently" });
 });
 
 app.post("/new", (req, res) => {
-  if((req?.body?.email ?? false) && (req?.body?.password ?? false)) {
-      console.info(email);
-    // const user = auth.createUserWithEmailAndPassword(req.body.email, req.body.password);
-    //
-    const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed up
-          const user = userCredential.user;
-          return res.status(201).json({message: "user created", user: user});
-          // ...
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          return res.status(400).json({message: "nothing happened", error: error
-        });
-    //
-  })
-}});
+  // if((req?.body?.email ?? false) && (req?.body?.password ?? false)) {
+  // console.info(email);
+  // const user = auth.createUserWithEmailAndPassword(req.body.email, req.body.password);
+  //
+  const auth = getAuth();
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed up
+      const user = userCredential.user;
+      return res.status(201).json({ message: "user created", user: user });
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      return res
+        .status(400)
+        .json({ message: "nothing happened", error: error });
+      //
+    });
+  // }
+});
 
 // Additional endpoints like listing subscriptions, unsubscribing, etc.
 
