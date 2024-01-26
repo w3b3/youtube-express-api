@@ -6,7 +6,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-const port = 3000; // or any port you prefer
+const port = process.env.PORT || 3000; // or any port you prefer
 
 // CORS configuration
 const corsOptions = {
@@ -100,9 +100,9 @@ app.post("/unsubscribe", async (req, res) => {
 	    } else {
 	    res.status(401).send('No token found in session');
 	  }
-        //console.log(id, auth); // TODO: DEBUG 
+        //console.log(id, auth); // TODO: DEBUG
         const service = google.youtube('v3');
-        
+
         service.subscriptions.delete({
             auth,
             id
@@ -110,7 +110,7 @@ app.post("/unsubscribe", async (req, res) => {
             if (err) {
 		console.error(err?.response?.data?.error?.message);
                 return res.status(401).send(err?.response?.data?.error?.message);
-                //return console.error(err.response?.data.error ?? err.response);                
+                //return console.error(err.response?.data.error ?? err.response);
             } else {
             //console.log(`Error: ${err}`);
             console.info("ALL GOOD");

@@ -1,36 +1,30 @@
 version: '3'
 services:
   api:
-    volumes:
-      #      - api:/app
-      - type: bind
-        source: ./src
-        target: /app
 #    init: true
-    container_name: api
-    hostname: api
-    labels:
-      - "ca.codein.api=API entrypoint"
-    # https://docs.docker.com/compose/compose-file/05-services/#network_mode
-    networks:
-      - youtube_api
 #    restart: "on-failure:3"
     build:
       context: .
     image: w3b3/api_youtube_subscriptions:latest
+    container_name: api
+    hostname: api
+    labels:
+      - "ca.codein.api=API entrypoint"
       #    develop:
       #      watch:
       #        - path: ./src
       #          action: sync+restart
       #    depends_on:
       #      - db
+    expose:
+      - 1235
     ports:
-      - 1235:3000
+      - "1235:3000"
     env_file:
       - ./a.env
         #      - ./b.env
     environment:
-      - FOO=BUZZ
+      - PORT=1233
     # entrypoint?
     # https://docs.docker.com/compose/compose-file/develop/
     #    command: ["echo", "Foo: ${FOO}"]
@@ -38,8 +32,15 @@ services:
     #    cpu_percent: 50
     #    configs:
     #      - nginx
-    expose:
-      - "1235"
+    # https://docs.docker.com/compose/compose-file/05-services/#network_mode
+    networks:
+      - youtube_api
+    volumes:
+      #      - api:/app
+      - type: bind
+        source: ./src
+        target: /app
+
         #  db:
         #    image: postgres
         #    environment:
