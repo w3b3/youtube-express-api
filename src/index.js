@@ -15,7 +15,7 @@ import cookieParser from "cookie-parser";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 //import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -83,27 +83,35 @@ app.get("/new", (req, res) => {
 });
 
 app.post("/new", (req, res) => {
-  // if((req?.body?.email ?? false) && (req?.body?.password ?? false)) {
-  // console.info(email);
+//  if((req?.body?.email ?? true) || (req?.body?.password ?? true)) {
+//      return res.status(400).json({message: "missing inputs"})
+//  }
+  //console.info(req.body);
   // const user = auth.createUserWithEmailAndPassword(req.body.email, req.body.password);
-  //
+  // this causes no harm.
+  const { email, password } = req.body;
   const auth = getAuth();
+    try {
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed up
       const user = userCredential.user;
+        console.info(user);
       return res.status(201).json({ message: "user created", user: user });
       // ...
     })
     .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      return res
+      //const errorCode = error.code;
+      //const errorMessage = error.message;
+      console.error(error.code);
+        return res
         .status(400)
-        .json({ message: "nothing happened", error: error });
+        .json({ message: "nothing happened", error: error.code });
       //
     });
-  // }
+  } catch (err) {
+        console.error("Catch", err);
+  }
 });
 
 // Additional endpoints like listing subscriptions, unsubscribing, etc.
